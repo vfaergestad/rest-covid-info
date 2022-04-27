@@ -8,16 +8,13 @@ services:
 stages:
   - build
 
-before_script:
-  # Login to Google Container Registry
-  - echo $GCP_SERVICE_KEY > gcloud-service-key.json
-  - echo $FIRESTORE_AUTH | base64 -d > ${CI_PROJECT_DIR}/serviceAccountKey.json
-  - echo $HASH_SECRET | base64 -d > ${CI_PROJECT_DIR}/internal/webserver/utility/hash_util/secret.go
-
 build:
   image: google/cloud-sdk
   stage: build
   script:
+    - echo $GCP_SERVICE_KEY > gcloud-service-key.json
+    - echo $FIRESTORE_AUTH | base64 -d > ${CI_PROJECT_DIR}/serviceAccountKey.json
+    - echo $HASH_SECRET | base64 -d > ${CI_PROJECT_DIR}/internal/webserver/utility/hash_util/secret.go
     - gcloud auth activate-service-account --key-file gcloud-service-key.json
     - gcloud config set project $GCP_PROJECT_ID
     # Build and tag image for both GCR and Gitlab registries
