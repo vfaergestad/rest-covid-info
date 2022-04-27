@@ -6,8 +6,6 @@ LABEL stage=builder
 # Set up execution environment in container's GOPATH
 WORKDIR /go/src/app/cmd
 
-RUN go mod tidy
-
 # Copy relevant folders into container
 COPY ./cmd /go/src/app/cmd
 COPY ./internal /go/src/app/internal
