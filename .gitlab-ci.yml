@@ -18,6 +18,6 @@ build:
     - gcloud auth activate-service-account --key-file gcloud-service-key.json
     - gcloud config set project $GCP_PROJECT_ID
     # Build and tag image for both GCR and Gitlab registries
-    - docker build --cache-from -t gcr.io/$GCP_PROJECT_ID/covid-api:latest .
+    - docker build . -t gcr.io/$GCP_PROJECT_ID/covid-api:latest
     # Push image to GCR
     - docker push gcr.io/$GCP_PROJECT_ID/covid-api:latest
