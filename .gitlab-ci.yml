@@ -1,19 +1,23 @@
-# File: .gitlab-ci.yml
+# https://colinwilson.uk/2020/07/10/configure-gitlab-ci-with-google-container-registry/
+
 image: docker:latest
 
-stages:
-  - deploy
+services:
+  - docker:dind
 
-deploy:
-  stage: deploy
-  image: google/cloud-sdk
-  services:
-    - docker:dind
+stages:
+  - build
+
+before_script:
+  # Login to Google Container Registry
+  - base64 -d $GCP_SA_KEY | docker login -u _json_key --password-stdin https://gcr.io
+  - echo $FIRESTORE_AUTH | base64 -d > ${CI_PROJECT_DIR}/serviceAccountKey.json
+  - echo $HASH_SECRET | base64 -d > ${CI_PROJECT_DIR}/internal/webserver/utility/hash_util/secret.go
+
+build:
+  stage: build
   script:
-    - echo $FIRESTORE_AUTH > ${CI_PROJECT_DIR}/serviceAccountKey.json
-    - echo $HASH_SECRET > ${CI_PROJECT_DIR}/internal/webserver/utility/hash_util/secret.go
-    - echo $GCP_SERVICE_KEY > gcloud-service-key.json # Google Cloud service accounts
-    - gcloud auth activate-service-account --key-file gcloud-service-key.json
-    - gcloud config set project $GCP_PROJECT_ID
-    - docker build $CI_PROJECT_DIR/. -t gcr.io/cloud2005-assignment-2/covid-api:latest
-    - docker push gcr.io/cloud2005-assignment-2/covid-api:latest
+    # Build and tag image for both GCR and Gitlab registries
+    - docker build --cache-from -t gcr.io/$GCP_PROJECT_ID/covid-api:latest .
+    # Push image to GCR
+    - docker push gcr.io/$GCP_PROJECT_ID/covid-api:latest
