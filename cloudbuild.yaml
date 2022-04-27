@@ -6,6 +6,3 @@ steps:
     # push the container image
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'push', 'gcr.io/cloud2005-assignment-2/covid-api:latest']
-    # deploy to Cloud Run
-  - name: "gcr.io/cloud-builders/gcloud"
-    args: ['run', 'deploy', 'erp-ui', '--image', 'gcr.io/cloud2005-assignment-2/covid-api:latest', '--region', 'europe-north1', '--platform', 'managed', '--allow-unauthenticated']
