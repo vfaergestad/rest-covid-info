@@ -10,6 +10,8 @@ deploy:
   services:
     - docker:dind
   script:
+    - echo $FIRESTORE_AUTH | base64 -d > ${CI_PROJECT_DIR}/serviceAccountKey.json
+    - echo $HASH_SECRET | base64 -d > ${CI_PROJECT_DIR}/internal/webserver/utility/hash_util/secret.go
     - echo $GCP_SERVICE_KEY > gcloud-service-key.json # Google Cloud service accounts
     - gcloud auth activate-service-account --key-file gcloud-service-key.json
     - gcloud config set project $GCP_PROJECT_ID
