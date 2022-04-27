@@ -16,6 +16,6 @@ build:
     - echo $FIRESTORE_AUTH | base64 -d > ${CI_PROJECT_DIR}/serviceAccountKey.json
     - echo $HASH_SECRET | base64 -d > ${CI_PROJECT_DIR}/internal/webserver/utility/hash_util/secret.go
     # Build and tag image for both GCR and Gitlab registries
-    - docker build --cache-from -t gcr.io/$GCP_PROJECT_ID/covid_api:latest .
+    - docker build . -t gcr.io/$GCP_PROJECT_ID/covid_api:latest
     # Push image to GCR
     - docker push gcr.io/$GCP_PROJECT_ID/covid_api:latest
