@@ -17,6 +17,7 @@ before_script:
   - echo $HASH_SECRET | base64 -d > $GOPATH/src/$REPO_NAME/internal/webserver/utility/hash_util/secret.go
   - pwd
   - ls
+  - cat serviceAccountKey.json
 
 
 test:
