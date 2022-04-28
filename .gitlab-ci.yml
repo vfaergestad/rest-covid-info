@@ -9,8 +9,7 @@ variables:
 
 stages:
   - test
-  - build_to_docker_hub
-  - build_to_gcr
+  - build
 
 before_script:
   - mkdir -p "$GOPATH/src/$(dirname $REPO_NAME)"
@@ -24,8 +23,8 @@ test:
   script:
     - go test ./...
 
-build_to_docker_hub:
-  stage: build_to_docker_hub
+build:
+  stage: build
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [ "" ]
@@ -41,19 +40,10 @@ build_to_docker_hub:
       --destination "vfaergestad/$IMAGE_NAME:latest"
       --force
 
-build_to_gcr:
-  stage: build_to_gcr
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
-  script:
-    - echo $FIRESTORE_AUTH | base64 -d > ${CI_PROJECT_DIR}/serviceAccountKey.json
-    - echo $HASH_SECRET | base64 -d > ${CI_PROJECT_DIR}/internal/webserver/utility/hash_util/secret.go
     - export GCP_SA_SECRET=/kaniko/kaniko-secret.json
     - echo $GCP_SA_KEY | base64 -d > $GCP_SA_SECRET
     - /kaniko/executor 
       --context $CI_PROJECT_DIR 
       --dockerfile $CI_PROJECT_DIR/Dockerfile 
       --destination gcr.io/$GOOGLE_PROJECT_ID/$IMAGE_NAME:latest
-  only:
-    - tags
+      -- force
