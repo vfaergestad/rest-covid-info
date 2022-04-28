@@ -7,6 +7,11 @@ Deployed services:
 Both of these deployments rely on resources provided by NTNU, and will only be available while these
 resources are still available to me.
 
+Image on Docker Hub:
+- https://hub.docker.com/r/vfaergestad/rest-covid-api/
+
+## General information
+
 This project is a submission to the second assignment in PROG-2005: Cloud Technologies. 
 It is a REST web application in Golang that provides the client with the ability to retrieve information 
 about Corona cases occurring in different countries, as well as the number and stringency of current policies in place.
