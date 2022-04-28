@@ -1,6 +1,11 @@
 # Assignment 2: REST-Covid-Info
 
-Deployed service: http://10.212.137.224/corona/v1/. (Only available on the NTNU internal network)
+Deployed services: 
+- http://34.88.245.32/corona/v1/
+- http://10.212.137.224/corona/v1/ (Only available on the NTNU internal network)
+
+Both of these deployments rely on resources provided by NTNU, and will only be available while these
+resources are still available to me.
 
 This project is a submission to the second assignment in PROG-2005: Cloud Technologies. 
 It is a REST web application in Golang that provides the client with the ability to retrieve information 
@@ -438,8 +443,12 @@ Example body:
 
 ## Deployment
 
-The is deployed on: http://10.212.137.224/corona/v1/ . This can be reached only on
-NTNU's internal network. The application is running on a Docker container, on a VM hosted on SkyHigh.
+The API is deployed on:
+- http://34.88.245.32/corona/v1/ (Deployment on GKE cluster on Google Cloud)
+- http://10.212.137.224/corona/v1/ (Running in docker on a VM on SkyHigh. Only available on the NTNU internal network)
+
+Both of these deployments rely on resources provided by NTNU, and will only be available while these
+resources are still available to me.
 
 If you want to run the application locally, you can either create a Docker container, or compile and run the source code.
 
@@ -484,6 +493,11 @@ Follow these steps to run the API on Docker:
     - docker-compose up -d
 
 The docker container is now running on port 8080 on the local machine.
+
+The docker image is also available on Docker Hub. You can run the image locally with the following command:
+```
+docker run -p 8080:8080 -d vfaergestad/rest-covid-info
+```
 
 
 ### Deployment by compiling and running the source code
@@ -647,6 +661,12 @@ the entry is removed from the cache, and a new entry is requested from the APIs.
 ### Adv. Task: unified handling of country name in Webhooks
 
 When a webhook is registered, counted, or triggered, the program uses a unified handling of country names and alpha-3 codes.
+
+### Gitlab CI
+
+To ease the test and build process of the application, a Gitlab CI pipeline is used. The pipeline is configured to run
+the tests, builds the docker image, and push the image to the docker hub. This happens each time new code is pushed to the
+repository. The pipeline file can be found [here](.gitlab-ci.yml).
 
 ## Edge cases
 
