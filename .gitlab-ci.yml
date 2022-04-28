@@ -9,12 +9,17 @@ stages:
   - test
   - build_to_docker_hub
 
+before_script:
+  - mkdir -p "$GOPATH/src/$(dirname $REPO_NAME)"
+  - ln -svf "$CI_PROJECT_DIR" "$GOPATH/src/$REPO_NAME"
+  - cd "$GOPATH/src/$REPO_NAME"
+  - echo $FIRESTORE_AUTH | base64 -d > ${CI_PROJECT_DIR}/serviceAccountKey.json
+  - echo $HASH_SECRET | base64 -d > ${CI_PROJECT_DIR}/internal/webserver/utility/hash_util/secret.go
+
+
 test:
   stage: test
   script:
-    - mkdir -p "$GOPATH/src/$(dirname $REPO_NAME)"
-    - ln -svf "$CI_PROJECT_DIR" "$GOPATH/src/$REPO_NAME"
-    - cd "$GOPATH/src/$REPO_NAME"
     - go test ./...
 
 build:
