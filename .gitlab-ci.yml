@@ -1,10 +1,24 @@
-image: golang:latest
+image: golang:1.17-alpine
+
+variables:
+  # Please edit to your GitLab project
+  REPO_NAME: git.gvk.idi.ntnu.no/course/prog2005/prog2005-2022-workspace/vegarfae/assignment-2/
+  DOCKER_HUB_LINK: https://index.docker.io/v1/
 
 stages:
-  - build
+  - test
+  - build_to_docker_hub
+
+test:
+  stage: test
+  script:
+    - mkdir -p "$GOPATH/src/$(dirname $REPO_NAME)"
+    - ln -svf "$CI_PROJECT_DIR" "$GOPATH/src/$REPO_NAME"
+    - cd "$GOPATH/src/$REPO_NAME"
+    - go test ./...
 
 build:
-  stage: build
+  stage: build_to_docker_hub
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [ "" ]
@@ -12,10 +26,10 @@ build:
     - mkdir -p /kaniko/.docker
     - echo $FIRESTORE_AUTH | base64 -d > ${CI_PROJECT_DIR}/serviceAccountKey.json
     - echo $HASH_SECRET | base64 -d > ${CI_PROJECT_DIR}/internal/webserver/utility/hash_util/secret.go
-    - echo "{\"auths\":{\"https://index.docker.io/v1/\":{\"auth\":\"$(echo -n vfaergestad:${DOCKER_REGISTRY_PASSWORD} | base64)\"}}}" > /kaniko/.docker/config.json
+    - echo "{\"auths\":{\"$DOCKER_HUB_LINK\":{\"auth\":\"$(echo -n vfaergestad:${DOCKER_REGISTRY_PASSWORD} | base64)\"}}}" > /kaniko/.docker/config.json
     - >-
       /kaniko/executor
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-      --destination "vfaergestad/covid-api:latest"
+      --destination "vfaergestad/rest-covid-api:latest"
       --force
