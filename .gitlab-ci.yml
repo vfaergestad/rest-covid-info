@@ -40,8 +40,8 @@ build:
       --destination "vfaergestad/$IMAGE_NAME:latest"
       --force
 
-    - export GCP_SA_SECRET=/kaniko/kaniko-secret.json
-    - echo $GCP_SA_KEY | base64 -d > $GCP_SA_SECRET
+    - echo $GCP_SA_KEY | base64 -d
+    - echo $GCP_SA_KEY | base64 -d > /kaniko/kaniko-secret.json
     - /kaniko/executor 
       --context $CI_PROJECT_DIR 
       --dockerfile $CI_PROJECT_DIR/Dockerfile 
