@@ -32,13 +32,11 @@ build:
     - mkdir -p /kaniko/.docker
     - echo $FIRESTORE_AUTH | base64 -d > ${CI_PROJECT_DIR}/serviceAccountKey.json
     - echo $HASH_SECRET | base64 -d > ${CI_PROJECT_DIR}/internal/webserver/utility/hash_util/secret.go
-    - echo "{\"auths\":{\"$DOCKER_HUB_LINK\":{\"auth\":\"$(echo -n vfaergestad:${DOCKER_REGISTRY_PASSWORD} | base64)\"}}}" > /kaniko/.docker/config.json
-    - echo $GCP_SA_KEY | base64 -d
-    - echo $GCP_SA_KEY | base64 -d > /kaniko/config.json
+    #- echo "{\"auths\":{\"$DOCKER_HUB_LINK\":{\"auth\":\"$(echo -n vfaergestad:${DOCKER_REGISTRY_PASSWORD} | base64)\"}}}" > /kaniko/.docker/config.json
+    - echo $GCP_SA_KEY | base64 -d > /kaniko/kaniko-secret.json
     - >-
       /kaniko/executor
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-      --destination "vfaergestad/$IMAGE_NAME:latest"
       --destination gcr.io/$GOOGLE_PROJECT_ID/$IMAGE_NAME:latest
       --force
