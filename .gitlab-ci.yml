@@ -8,14 +8,14 @@ build:
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [ "" ]
-    script:
-      - mkdir -p /kaniko/.docker
-      - echo $FIRESTORE_AUTH | base64 -d > ${CI_PROJECT_DIR}/auth.json
-      - echo $HASH_SECRET | base64 -d > ${CI_PROJECT_DIR}/internal/webserver/utility/hash_util/secret.go
-      - echo "{\"auths\":{\"https://index.docker.io/v1/\":{\"auth\":\"$(echo -n vfaergestad:${DOCKER_REGISTRY_PASSWORD} | base64)\"}}}" > /kaniko/.docker/config.json
-      - >-
-        /kaniko/executor
-        --context "${CI_PROJECT_DIR}"
-        --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-        --destination "vfaergestad/covid-api:latest"
-        --force
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo $FIRESTORE_AUTH | base64 -d > ${CI_PROJECT_DIR}/auth.json
+    - echo $HASH_SECRET | base64 -d > ${CI_PROJECT_DIR}/internal/webserver/utility/hash_util/secret.go
+    - echo "{\"auths\":{\"https://index.docker.io/v1/\":{\"auth\":\"$(echo -n vfaergestad:${DOCKER_REGISTRY_PASSWORD} | base64)\"}}}" > /kaniko/.docker/config.json
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "vfaergestad/covid-api:latest"
+      --force
