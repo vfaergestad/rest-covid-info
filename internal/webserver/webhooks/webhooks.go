@@ -26,7 +26,7 @@ func Invoke(country string) {
 			log.Println(err)
 		}
 	}
-	country = strings.ToUpper(country)
+	country = strings.Title(strings.ToLower(country))
 
 	err = checkAndInvokeWebhooks(country)
 	if err != nil {
