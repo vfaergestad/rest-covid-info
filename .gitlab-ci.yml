@@ -15,10 +15,6 @@ before_script:
   - cd "$GOPATH/src/$REPO_NAME"
   - echo $FIRESTORE_AUTH | base64 -d > $GOPATH/src/$REPO_NAME/serviceAccountKey.json
   - echo $HASH_SECRET | base64 -d > $GOPATH/src/$REPO_NAME/internal/webserver/utility/hash_util/secret.go
-  - pwd
-  - ls
-  - cat serviceAccountKey.json
-
 
 test:
   stage: test
