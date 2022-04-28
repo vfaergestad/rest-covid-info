@@ -37,4 +37,5 @@ build:
       /kaniko/executor
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "vfaergestad/$IMAGE_NAME:latest"
       --force
