@@ -79,7 +79,7 @@ func HandlerCases(w http.ResponseWriter, r *http.Request) {
 	// Retrieves the cases with the given country data from the api.
 	casesResponseStruct, err := cases_api.GetResponseStruct(countryQuery)
 	if err != nil {
-		if constants.IsBadRequestError(err) {
+		if constants.IsBadRequestError(err) || err.Error() == constants.GetCountryNotFoundInCasesApi(countryQuery).Error() {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		} else if constants.IsNotFoundError(err) {
