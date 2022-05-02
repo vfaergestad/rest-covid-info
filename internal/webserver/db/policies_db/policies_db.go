@@ -88,6 +88,7 @@ func DeletePolicy(country string, scope string) error {
 	}
 }
 
+// SetTestMode sets the database to not respond to any requests, for testing purposes.
 func SetTestMode() {
 	testMode = true
 }
