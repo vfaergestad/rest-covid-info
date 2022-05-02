@@ -66,7 +66,11 @@ func HandlerCases(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		// Sanitizes the country name.
-		countryQuery = strings.Title(strings.ToLower(countryQuery))
+		if countryQuery != "US" && countryQuery != "us" {
+			countryQuery = strings.Title(strings.ToLower(countryQuery))
+		} else {
+			countryQuery = strings.ToUpper(countryQuery)
+		}
 	}
 
 	// Invokes the webhook package to see if any webhooks needs to be counted up or needs to be invoked.
