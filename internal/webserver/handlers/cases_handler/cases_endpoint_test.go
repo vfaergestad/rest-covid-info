@@ -144,7 +144,7 @@ func TestRequestsFromCases(t *testing.T) {
 				url: casesEndpoint.URL + "/corona/v1/cases/Taiwan",
 			},
 			method:             http.MethodGet,
-			expectedStatusCode: http.StatusInternalServerError,
+			expectedStatusCode: http.StatusBadRequest,
 			expectedResponse: structs.CasesResponse{
 				Country:    "",
 				Date:       "",
