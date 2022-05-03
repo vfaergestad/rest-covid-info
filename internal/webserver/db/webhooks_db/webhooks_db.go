@@ -9,6 +9,8 @@ import (
 	"assignment-2/internal/webserver/utility/hash_util"
 	"errors"
 	"google.golang.org/api/iterator"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"strings"
 )
 
@@ -81,14 +83,13 @@ func AddWebhook(url string, country string, calls int) (string, error) {
 	webhookId := hash_util.HashWebhook(url, country, calls)
 
 	res := db.GetClient().Collection(collection).Doc(webhookId)
-	doc, _ := res.Get(db.GetContext())
+	_, err := res.Get(db.GetContext())
 
-	// Checks if the webhook already exists in the database.
-	if doc.Exists() {
+	if status.Code(err) != codes.NotFound {
 		return "", errors.New(constants.WebhookAlreadyExistingError)
 	}
 
-	_, err := res.Set(db.GetContext(), map[string]interface{}{
+	_, err = res.Set(db.GetContext(), map[string]interface{}{
 		"webhookId": webhookId,
 		"url":       url,
 		"country":   country,
@@ -110,14 +111,13 @@ func UpdateWebhook(url string, country string, calls int, count int) (string, er
 	webhookId := hash_util.HashWebhook(url, country, calls)
 
 	res := db.GetClient().Collection(collection).Doc(webhookId)
-	doc, _ := res.Get(db.GetContext())
+	_, err := res.Get(db.GetContext())
 
-	// Checks if the webhook already exists in the database.
-	if !doc.Exists() {
+	if status.Code(err) == codes.NotFound {
 		return "", errors.New(constants.WebhookNotFoundError)
 	}
 
-	_, err := res.Set(db.GetContext(), map[string]interface{}{
+	_, err = res.Set(db.GetContext(), map[string]interface{}{
 		"webhookId": webhookId,
 		"url":       url,
 		"country":   country,
